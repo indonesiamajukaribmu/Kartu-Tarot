@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lentera Tarot — Kartu Ramalan Modern & Kuno</title>
+<style>
+/* ============================================
+   ROOT VARIABLES — Dual Theme System
+   ============================================ */
+:root {
+  /* Modern Mode (default) */
+  --bg-gradient-1: #0a0e27;
+  --bg-gradient-2: #1a1f4d;
+  --bg-gradient-3: #0d1132;
+  --surface: rgba(20, 25, 60, 0.7);
+  --surface-hover: rgba(35, 45, 95, 0.8);
+  --border-glow: rgba(180, 140, 60, 0.4);
+  --text-primary: #e8e6dc;
+  --text-secondary: #a8b2d1;
+  --text-muted: #6b7a9e;
+  --accent-gold: #d4af37;
+  --accent-cyan: #4dd0e1;
+  --accent-purple: #9b6dff;
+  --card-back-1: #1a2247;
+  --card-back-2: #0a0e27;
+  --card-face-bg: linear-gradient(160deg, #1a1f4d 0%, #0d1132 100%);
+  --card-border: rgba(212, 175, 55, 0.5);
+  --font-display: 'Cinzel', 'Trajan Pro', 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mystic: 'Cormorant Garamond', 'Palatino', serif;
+  --border-radius: 14px;
+  --shadow-card: 0 8px 30px rgba(0,0,0,0.5), 0 0 20px rgba(180,140,60,0.15);
+  --pattern-opacity: 0.08;
+}
+
+[data-mode="ancient"] {
+  --bg-gradient-1: #2b1810;
+  --bg-gradient-2: #3d2418;
+  --bg-gradient-3: #1f1108;
+  --surface: rgba(60, 40, 25, 0.75);
+  --surface-hover: rgba(85, 55, 35, 0.85);
+  --border-glow: rgba(200, 160, 90, 0.5);
+  --text-primary: #f4e4c1;
+  --text-secondary: #d4b896;
+  --text-muted: #8a6f4f;
+  --accent-gold: #c9a961;
+  --accent-cyan: #a07845;
+  --accent-purple: #6b4a2b;
+  --card-back-1: #4a2f1a;
+  --card-back-2: #2b1810;
+  --card-face-bg: linear-gradient(160deg, #f4e4c1 0%, #d4b896 50%, #b89968 100%);
+  --card-border: rgba(101, 67, 33, 0.7);
+  --font-display: 'UnifrakturMaguntia', 'Old English Text MT', 'Blackletter', serif;
+  --font-body: 'EB Garamond', 'Garamond', 'Times New Roman', serif;
+  --font-mystic: 'Philosopher', 'Cormorant Garamond', serif;
+  --border-radius: 8px;
+  --shadow-card: 0 8px 25px rgba(0,0,0,0.6), 0 0 25px rgba(200,160,90,0.2);
+  --pattern-opacity: 0.15;
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: radial-gradient(ellipse at top, var(--bg-gradient-2) 0%, var(--bg-gradient-1) 50%, var(--bg-gradient-3) 100%);
+  background-attachment: fixed;
+  transition: background 0.6s ease, color 0.6s ease;
+  overflow-x: hidden;
+}
+
+/* Decorative starfield / texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, var(--accent-gold) 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 70%, var(--accent-gold) 50%, transparent 100%),
+    radial-gradient(2px 2px at 80% 20%, var(--accent-cyan) 50%, transparent 100%),
+    radial-gradient(1px 1px at 30% 80%, var(--text-secondary) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 40%, var(--accent-gold) 50%, transparent 100%),
+    radial-gradient(1px 1px at 90% 60%, var(--text-secondary) 50%, transparent 100%),
+    radial-gradient(1px 1px at 10% 50%, var(--accent-purple) 50%, transparent 100%),
+    radial-gradient(1px 1px at 50% 10%, var(--accent-gold) 50%, transparent 100%),
+    radial-gradient(1px 1px at 40% 60%, var(--accent-cyan) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 65% 85%, var(--accent-gold) 50%, transparent 100%);
+  background-size: 1200px 1200px;
+  opacity: var(--pattern-opacity);
+  pointer-events: none;
+  z-index: 0;
+  animation: drift 200s linear infinite;
+}
+
+[data-mode="ancient"] body::before {
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(101,67,33,0.4) 0%, transparent 30%),
+    radial-gradient(circle at 75% 75%, rgba(101,67,33,0.3) 0%, transparent 35%),
+    repeating-linear-gradient(45deg, transparent 0, transparent 3px, rgba(101,67,33,0.05) 3px, rgba(101,67,33,0.05) 6px);
+  background-size: 600px 600px, 800px 800px, 100px 100px;
+}
+
+@keyframes drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 1200px 600px; }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+header {
+  position: relative;
+  z-index: 10;
+  padding: 32px 24px 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-glow);
+  background: linear-gradient(180deg, rgba(0,0,0,0.3), transparent);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.brand-sigil {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-gold);
+  filter: drop-shadow(0 0 8px var(--border-glow));
+  animation: rotate-slow 60s linear infinite;
+}
+
+@keyframes rotate-slow {
+  to { transform: rotate(360deg); }
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--text-primary) 50%, var(--accent-gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px var(--border-glow);
+}
+
+[data-mode="ancient"] h1 {
+  text-shadow: 0 0 20px rgba(200,160,90,0.4);
+  letter-spacing: 0.05em;
+}
+
+.subtitle {
+  font-family: var(--font-mystic);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+/* ============================================
+   MODE TOGGLE
+   ============================================ */
+.mode-toggle {
+  display: inline-flex;
+  margin: 18px auto 0;
+  padding: 4px;
+  border: 1px solid var(--border-glow);
+  border-radius: 30px;
+  background: rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.mode-btn {
+  padding: 8px 22px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+}
+
+.mode-btn.active {
+  background: linear-gradient(135deg, var(--accent-gold), rgba(212,175,55,0.7));
+  color: var(--bg-gradient-1);
+  box-shadow: 0 0 15px var(--border-glow);
+  font-weight: 600;
+}
+
+[data-mode="ancient"] .mode-btn.active {
+  background: linear-gradient(135deg, var(--accent-gold), #8b6914);
+  color: #2b1810;
+}
+
+.mode-btn:not(.active):hover {
+  color: var(--text-primary);
+}
+
+.mode-hint {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ============================================
+   MAIN CONTAINER
+   ============================================ */
+main {
+  position: relative;
+  z-index: 5;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+/* ============================================
+   SPREAD SELECTOR
+   ============================================ */
+.spread-selector {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.spread-btn {
+  padding: 12px 24px;
+  border: 1px solid var(--border-glow);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(8px);
+}
+
+.spread-btn:hover {
+  background: var(--surface-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px var(--border-glow);
+}
+
+.spread-btn.active {
+  background: linear-gradient(135deg, var(--accent-gold), rgba(212,175,55,0.6));
+  color: var(--bg-gradient-1);
+  border-color: var(--accent-gold);
+  font-weight: 600;
+}
+
+[data-mode="ancient"] .spread-btn.active {
+  color: #2b1810;
+}
+
+.spread-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================
+   READING AREA
+   ============================================ */
+.reading-stage {
+  position: relative;
+  min-height: 420px;
+  padding: 30px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(10px);
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+[data-mode="ancient"] .reading-stage {
+  background-image:
+    linear-gradient(var(--surface), var(--surface)),
+    repeating-linear-gradient(0deg, rgba(101,67,33,0.1) 0, rgba(101,67,33,0.1) 1px, transparent 1px, transparent 4px);
+  border-style: double;
+  border-width: 4px;
+}
+
+.spread-label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.spread-desc {
+  font-family: var(--font-mystic);
+  font-style: italic;
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+/* Card positions in spread */
+.card-positions {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 28px;
+  flex-wrap: wrap;
+  min-height: 320px;
+}
+
+.position-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.position-name {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  min-height: 18px;
+}
+
+.position-slot.empty .position-name {
+  color: var(--text-muted);
+}
+
+/* ============================================
+   TAROT CARD
+   ============================================ */
+.tarot-card {
+  width: 180px;
+  height: 280px;
+  perspective: 1200px;
+  cursor: pointer;
+  position: relative;
+}
+
+.tarot-card.placeholder {
+  border: 2px dashed var(--border-glow);
+  border-radius: var(--border-radius);
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-family: var(--font-mystic);
+  font-style: italic;
+  text-align: center;
+  padding: 12px;
+  transition: all 0.3s;
+}
+
+.tarot-card.placeholder:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  background: rgba(212,175,55,0.05);
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tarot-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.tarot-card.reversed .card-inner {
+  transform: rotateY(180deg) rotateZ(180deg);
+}
+
+.tarot-card.reversed:not(.flipped) .card-inner {
+  transform: rotateZ(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+/* Card Back — visible by default (the mystery side) */
+.card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background:
+    linear-gradient(135deg, var(--card-back-1), var(--card-back-2));
+  border: 2px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius);
+}
+
+[data-mode="ancient"] .card-back {
+  background:
+    radial-gradient(circle at center, var(--card-back-1), var(--card-back-2));
+}
+
+.card-back-pattern {
+  width: 80%;
+  height: 90%;
+  border: 1px solid var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  opacity: 0.85;
+}
+
+.card-back-pattern::before,
+.card-back-pattern::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(212,175,55,0.3);
+}
+
+.card-back-symbol {
+  width: 60px;
+  height: 60px;
+  color: var(--accent-gold);
+  filter: drop-shadow(0 0 6px var(--border-glow));
+}
+
+/* Card Front — hidden by default, revealed when .flipped */
+.card-front {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background: var(--card-face-bg);
+  border: 2px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: var(--border-radius);
+  transform: rotateY(180deg);
+}
+
+[data-mode="ancient"] .card-front {
+  color: #3d2418;
+}
+
+.card-numeral {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--accent-gold);
+  text-align: center;
+  letter-spacing: 0.1em;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--card-border);
+}
+
+[data-mode="ancient"] .card-numeral {
+  color: #6b4a2b;
+}
+
+.card-illustration {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+}
+
+.card-illustration svg {
+  width: 100%;
+  height: 100%;
+  max-width: 140px;
+  max-height: 160px;
+}
+
+.card-name {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: var(--text-primary);
+  text-align: center;
+  letter-spacing: 0.05em;
+  padding: 4px 0;
+  border-top: 1px solid var(--card-border);
+  text-transform: uppercase;
+}
+
+[data-mode="ancient"] .card-name {
+  color: #3d2418;
+}
+
+/* Reversed indicator badge */
+.reversed-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--accent-purple);
+  color: white;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  z-index: 5;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s;
+}
+
+.tarot-card.reversed .reversed-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ============================================
+   ACTION BAR
+   ============================================ */
+.action-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.action-btn {
+  padding: 12px 28px;
+  border: 1px solid var(--accent-gold);
+  background: linear-gradient(135deg, var(--accent-gold), rgba(212,175,55,0.7));
+  color: var(--bg-gradient-1);
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+[data-mode="ancient"] .action-btn {
+  color: #2b1810;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--border-glow);
+  filter: brightness(1.1);
+}
+
+.action-btn.secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-glow);
+}
+
+.action-btn.secondary:hover {
+  background: var(--surface);
+  border-color: var(--accent-gold);
+}
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   READING INTERPRETATION
+   ============================================ */
+.interpretation-panel {
+  background: var(--surface);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  margin-top: 24px;
+  backdrop-filter: blur(10px);
+}
+
+[data-mode="ancient"] .interpretation-panel {
+  border-style: double;
+  border-width: 4px;
+}
+
+.interpretation-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--accent-gold);
+  margin-bottom: 16px;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.interp-card {
+  padding: 16px;
+  border-left: 3px solid var(--accent-gold);
+  background: rgba(0,0,0,0.2);
+  margin-bottom: 14px;
+  border-radius: 0 8px 8px 0;
+}
+
+[data-mode="ancient"] .interp-card {
+  background: rgba(101,67,33,0.1);
+}
+
+.interp-card:last-child {
+  margin-bottom: 0;
+}
+
+.interp-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.interp-card-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+[data-mode="ancient"] .interp-card-name {
+  color: var(--accent-gold);
+}
+
+.interp-card-position {
+  font-family: var(--font-mystic);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--accent-cyan);
+}
+
+[data-mode="ancient"] .interp-card-position {
+  color: #8b6914;
+}
+
+.interp-orientation {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.interp-orientation.upright {
+  background: rgba(77, 208, 225, 0.2);
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+}
+
+[data-mode="ancient"] .interp-orientation.upright {
+  background: rgba(139,105,20,0.2);
+  color: #8b6914;
+  border-color: #8b6914;
+}
+
+.interp-orientation.reversed {
+  background: rgba(155, 109, 255, 0.2);
+  color: var(--accent-purple);
+  border: 1px solid var(--accent-purple);
+}
+
+[data-mode="ancient"] .interp-orientation.reversed {
+  background: rgba(107,74,43,0.2);
+  color: #6b4a2b;
+  border-color: #6b4a2b;
+}
+
+.interp-keywords {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.interp-meaning {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+[data-mode="ancient"] .interp-meaning {
+  font-family: var(--font-mystic);
+  font-size: 15px;
+}
+
+/* ============================================
+   DECK GALLERY
+   ============================================ */
+.deck-section {
+  margin-top: 50px;
+}
+
+.deck-section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--accent-gold);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.deck-section-sub {
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  font-family: var(--font-mystic);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.deck-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--border-radius);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.deck-card:hover {
+  background: var(--surface-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px var(--border-glow);
+}
+
+.deck-card .tarot-card {
+  width: 130px;
+  height: 200px;
+  cursor: pointer;
+}
+
+.deck-card .card-numeral {
+  font-size: 11px;
+}
+
+.deck-card .card-name {
+  font-size: 9px;
+}
+
+.deck-card-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--text-primary);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.deck-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.mini-btn {
+  padding: 4px 10px;
+  font-size: 10px;
+  border: 1px solid var(--border-glow);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
+
+.mini-btn:hover {
+  background: var(--accent-gold);
+  color: var(--bg-gradient-1);
+  border-color: var(--accent-gold);
+}
+
+[data-mode="ancient"] .mini-btn:hover {
+  color: #2b1810;
+}
+
+/* ============================================
+   MODAL — Card Detail
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: var(--bg-gradient-1);
+  border: 1px solid var(--accent-gold);
+  border-radius: var(--border-radius);
+  max-width: 720px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  position: relative;
+  animation: slideUp 0.4s ease;
+}
+
+[data-mode="ancient"] .modal-content {
+  background: linear-gradient(160deg, #2b1810, #3d2418);
+  border-style: double;
+  border-width: 5px;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--accent-gold);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--accent-gold);
+  color: var(--bg-gradient-1);
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 640px) {
+  .modal-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
+
+.modal-card-display {
+  width: 200px;
+  height: 310px;
+}
+
+.modal-card-display .card-inner {
+  transform: rotateY(180deg);
+}
+
+.modal-info h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--accent-gold);
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+
+.modal-info .modal-traditional {
+  font-family: var(--font-mystic);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.modal-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.meta-tag {
+  padding: 3px 10px;
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.modal-section {
+  margin-bottom: 18px;
+}
+
+.modal-section-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orient-tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.orient-tag.up {
+  background: rgba(77, 208, 225, 0.2);
+  color: var(--accent-cyan);
+}
+
+.orient-tag.rev {
+  background: rgba(155, 109, 255, 0.2);
+  color: var(--accent-purple);
+}
+
+.modal-keywords {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.modal-meaning {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: var(--font-mystic);
+  font-style: italic;
+  border-top: 1px solid var(--border-glow);
+  margin-top: 40px;
+  position: relative;
+  z-index: 5;
+}
+
+footer .quote {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   TOAST
+   ============================================ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--bg-gradient-1);
+  border: 1px solid var(--accent-gold);
+  color: var(--text-primary);
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  z-index: 200;
+  transition: transform 0.4s ease;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 20px var(--border-glow);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================
+   SHUFFLE ANIMATION
+   ============================================ */
+.shuffling .tarot-card .card-inner {
+  animation: shuffle-card 0.8s ease;
+}
+
+@keyframes shuffle-card {
+  0%, 100% { transform: rotateY(180deg) translateX(0); }
+  25% { transform: rotateY(180deg) translateX(-20px) rotateZ(-10deg); }
+  50% { transform: rotateY(180deg) translateX(20px) rotateZ(10deg); }
+  75% { transform: rotateY(180deg) translateX(-10px) rotateZ(-5deg); }
+}
+
+.draw-anim .card-inner {
+  animation: drawCard 0.6s ease forwards;
+}
+
+@keyframes drawCard {
+  0% { transform: rotateY(180deg) translateY(-30px) scale(0.9); opacity: 0.5; }
+  100% { transform: rotateY(180deg) translateY(0) scale(1); opacity: 1; }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .tarot-card {
+    width: 140px;
+    height: 220px;
+  }
+  .deck-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 14px;
+  }
+  .deck-card .tarot-card {
+    width: 110px;
+    height: 170px;
+  }
+  .card-positions {
+    gap: 16px;
+  }
+  main {
+    padding: 20px 14px 40px;
+  }
+  header {
+    padding: 24px 16px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 24px; }
+  .action-btn { padding: 10px 18px; font-size: 12px; }
+  .modal-content { padding: 20px 16px; }
+}
+</style>
+</head>
+<body data-mode="modern">
+
+<header>
+  <div class="brand">
+    <div class="brand-sigil">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="50" cy="50" r="45"/>
+        <circle cx="50" cy="50" r="35"/>
+        <path d="M50 5 L55 45 L95 50 L55 55 L50 95 L45 55 L5 50 L45 45 Z" fill="currentColor" opacity="0.6"/>
+        <circle cx="50" cy="50" r="8" fill="currentColor"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Lentera Tarot</h1>
+      <p class="subtitle">Bayangan Kartu Para Peramal & Penyihir</p>
+    </div>
+  </div>
+  <div class="mode-toggle" role="tablist">
+    <button class="mode-btn active" data-mode="modern" role="tab">Mode Modern</button>
+    <button class="mode-btn" data-mode="ancient" role="tab">Mode Kuno</button>
+  </div>
+  <p class="mode-hint" id="modeHint">Desain kontemporer dengan nuansa emas &amp; langit malam — untuk peramal masa kini.</p>
+</header>
+
+<main>
+  <!-- Spread Selector -->
+  <div class="spread-selector">
+    <button class="spread-btn active" data-spread="single">
+      <svg class="spread-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="9" y="3" width="6" height="18" rx="1"/>
+      </svg>
+      Satu Kartu
+    </button>
+    <button class="spread-btn" data-spread="three">
+      <svg class="spread-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="5" width="6" height="14" rx="1"/>
+        <rect x="9" y="5" width="6" height="14" rx="1"/>
+        <rect x="16" y="5" width="6" height="14" rx="1"/>
+      </svg>
+      Tiga Kartu
+    </button>
+    <button class="spread-btn" data-spread="five">
+      <svg class="spread-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="9" y="2" width="6" height="6" rx="1"/>
+        <rect x="2" y="9" width="6" height="6" rx="1"/>
+        <rect x="9" y="9" width="6" height="6" rx="1"/>
+        <rect x="16" y="9" width="6" height="6" rx="1"/>
+        <rect x="9" y="16" width="6" height="6" rx="1"/>
+      </svg>
+      Salib Kelt
+    </button>
+  </div>
+
+  <!-- Reading Stage -->
+  <div class="reading-stage" id="readingStage">
+    <div class="spread-label" id="spreadLabel">RAMALAN HARIAN</div>
+    <div class="spread-desc" id="spreadDesc">Tarik satu kartu untuk mengetahui energi yang menyelimuti harimu.</div>
+    <div class="card-positions" id="cardPositions">
+      <!-- Slots will be populated by JS -->
+    </div>
+    <div class="action-bar">
+      <button class="action-btn" id="drawBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+        Tarik Kartu
+      </button>
+      <button class="action-btn secondary" id="shuffleBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 3 21 3 21 8"/>
+          <line x1="4" y1="20" x2="21" y2="3"/>
+          <polyline points="21 16 21 21 16 21"/>
+          <line x1="15" y1="15" x2="21" y2="21"/>
+          <line x1="4" y1="4" x2="9" y2="9"/>
+        </svg>
+        Kocok
+      </button>
+      <button class="action-btn secondary" id="revealBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        Buka Semua
+      </button>
+      <button class="action-btn secondary" id="clearBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/>
+        </svg>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Interpretation Panel -->
+  <div class="interpretation-panel" id="interpretationPanel" style="display:none;">
+    <div class="interpretation-title">✦ Tafsir Ramalan ✦</div>
+    <div id="interpretations"></div>
+  </div>
+
+  <!-- Deck Gallery -->
+  <div class="deck-section">
+    <h2 class="deck-section-title">Galeri Major Arcana</h2>
+    <p class="deck-section-sub">22 Kartu Besar — klik untuk menelaah, atau unduh sebagai PNG.</p>
+    <div class="deck-grid" id="deckGrid"></div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-grid">
+      <div class="modal-card-display" id="modalCardDisplay"></div>
+      <div class="modal-info" id="modalInfo"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="quote">"Kartu adalah cermin jiwa — yang tergambar adalah engkau sendiri."</span>
+  <span>Lentera Tarot · Untuk Para Peramal &amp; Penyihir · Diramu dengan dua wajah waktu.</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   TAROT CARD DATA — 22 Major Arcana
+   Each card has SVG art, upright & reversed meanings in Indonesian
+   ============================================================ */
+const TAROT_DECK = [
+  {
+    id: 0, numeral: "0", name: "Si Bodoh", traditional: "The Fool",
+    element: "Udara", planet: "Uranus",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <circle cx="50" cy="35" r="12" fill="url(#g0)"/>
+      <path d="M50 47 L45 70 L40 110 L50 105 L60 110 L55 70 Z" fill="url(#g0)"/>
+      <path d="M40 110 L25 130 M60 110 L75 130" stroke="url(#g0)" stroke-width="2" fill="none"/>
+      <circle cx="75" cy="20" r="6" fill="#fff" opacity="0.8"/>
+      <path d="M70 28 L75 22 L80 28" stroke="url(#g0)" stroke-width="1.5" fill="none"/>
+      <path d="M70 130 Q70 120 75 115 Q80 120 80 130" fill="url(#g0)" opacity="0.7"/>
+      <path d="M30 90 L20 95 L25 100" stroke="url(#g0)" stroke-width="2" fill="none"/>
+    </svg>`,
+    upright: { keywords: "awal baru, kepolosan, spontanitas, petualangan, kebebasan",
+      meaning: "Waktu untuk melangkah ke tak terjangkaan dengan hati yang terbuka. Kartu ini menandakan babak baru yang penuh keajaiban — engkau disebut untuk mempercayai intuisi dan menempuh jalan yang belum pernah dijelajahi. Seperti anak muda di tepi jurang, engkau diajak melompat dengan keyakinan bahwa angin akan menopangmu." },
+    reversed: { keywords: "kecerobohan, ketidakmatangan, keputusan tergesa, risiko tak terhitung",
+      meaning: "Kebebasan yang tanpa perhitungan menjadi kecerobohan. Engkau mungkin mengabaikan tanda peringatan atau tergesa-gesa mengambil keputusan besar tanpa persiapan. Mundur sejenak, renungkan, dan pastikan langkahmu berpijak pada tanah yang nyata, bukan awan ilusi." }
+  },
+  {
+    id: 1, numeral: "I", name: "Sang Pesulap", traditional: "The Magician",
+    element: "Merkurius", planet: "Merkurius",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M40 20 Q50 8 60 20" stroke="url(#g1)" stroke-width="2.5" fill="none"/>
+      <circle cx="50" cy="35" r="10" fill="url(#g1)"/>
+      <rect x="42" y="45" width="16" height="50" rx="2" fill="url(#g1)"/>
+      <path d="M30 95 L70 95 L75 110 L25 110 Z" fill="url(#g1)" opacity="0.85"/>
+      <circle cx="30" cy="105" r="4" fill="#4dd0e1"/>
+      <circle cx="42" cy="105" r="4" fill="#d4af37"/>
+      <circle cx="58" cy="105" r="4" fill="#9b6dff"/>
+      <circle cx="70" cy="105" r="4" fill="#e74c3c"/>
+      <path d="M50 30 L48 25 L52 25 Z" fill="#fff"/>
+    </svg>`,
+    upright: { keywords: "manifestasi, kekuasaan, keterampilan, fokus, kreativitas",
+      meaning: "Engkau memiliki segala alat untuk menciptakan realitas yang diinginkan. Pesulap mengajarkan bahwa kehendak, pikiran, perasaan, dan tindakan harus sejalan. Saatnya menyatukan keempat unsur — tanah, air, api, udara — untuk mewujudkan niatmu. Kekuatan berada di ujung jari tanganmu." },
+    reversed: { keywords: "manipulasi, ilusi, penyalahgunaan kekuasaan, keterampilan tersembunyi",
+      meaning: "Kekuatan yang dimiliki dapat berbalik menjadi alat manipulasi. Waspadai niat yang tidak murni — baik dalam dirimu maupun orang lain. Bisa juga menandakan bakat yang belum disadari atau justru digunakan untuk menipu. Periksa kembali motivasi terdalam dari setiap tindakan." }
+  },
+  {
+    id: 2, numeral: "II", name: "Imam Tinggi", traditional: "The High Priestess",
+    element: "Air", planet: "Bulan",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <rect x="20" y="20" width="10" height="100" fill="url(#g2)" opacity="0.7"/>
+      <rect x="70" y="20" width="10" height="100" fill="url(#g2)" opacity="0.7"/>
+      <path d="M20 20 L25 12 L30 20" fill="url(#g2)"/>
+      <path d="M70 20 L75 12 L80 20" fill="url(#g2)"/>
+      <circle cx="50" cy="40" r="14" fill="url(#g2)"/>
+      <path d="M42 35 Q50 28 58 35" stroke="#fff" stroke-width="1.5" fill="none"/>
+      <circle cx="50" cy="40" r="6" fill="#4dd0e1"/>
+      <rect x="42" y="55" width="16" height="50" rx="2" fill="url(#g1)"/>
+      <path d="M50 110 Q40 115 35 125 Q45 125 50 115 Q55 125 65 125 Q60 115 50 110" fill="url(#g2)" opacity="0.6"/>
+    </svg>`,
+    upright: { keywords: "intuisi, misteri, alam bawah sadar, kebijaksanaan dalam, spiritualitas",
+      meaning: "Diam adalah suara paling kuat saat ini. Imam Tinggi membuka gerbang ke alam bawah sadar dan pengetahuan tersembunyi. Dengarkan mimpi, perasaan, dan bisikan jiwa. Jawaban tidak datang dari luar, melainkan dari kedalaman batin yang sunyi. Saatnya merenung dan menerima wahyu." },
+    reversed: { keywords: "rahasia terungkap, intuisi terabaikan, ketidakseimbangan, histeria",
+      meaning: "Engkau mengabaikan suara batin atau sebaliknya — rahasia yang tersembunyi akan terbongkar. Bisa juga menandakan ketidakseimbangan antara akal dan perasaan. Tunjukkan kembali hubungan dengan intuisimu, jangan biarkan noise luar mengaburkan kebijaksanaan dalam." }
+  },
+  {
+    id: 3, numeral: "III", name: "Permaisuri", traditional: "The Empress",
+    element: "Bumi", planet: "Venus",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M30 25 L35 15 L40 25 L45 15 L50 25 L55 15 L60 25 L65 15 L70 25" fill="url(#g3)"/>
+      <circle cx="50" cy="40" r="13" fill="url(#g3)"/>
+      <path d="M37 53 Q50 48 63 53 L65 90 L35 90 Z" fill="url(#g3)"/>
+      <path d="M40 90 L35 120 M60 90 L65 120" stroke="url(#g3)" stroke-width="3"/>
+      <path d="M25 70 L20 75 L25 80" stroke="url(#g3)" stroke-width="2" fill="none"/>
+      <path d="M75 70 L80 75 L75 80" stroke="url(#g3)" stroke-width="2" fill="none"/>
+      <ellipse cx="50" cy="105" rx="8" ry="4" fill="#9b6dff" opacity="0.6"/>
+      <ellipse cx="50" cy="115" rx="10" ry="5" fill="#9b6dff" opacity="0.6"/>
+    </svg>`,
+    upright: { keywords: "kesuburan, keibuan, penciptaan, kelimpahan, alam, keindahan",
+      meaning: "Energi feminin yang subur mengalir dalam hidupmu. Waktu untuk menciptakan, merawat, dan menumbuhkan. Permaisuri melambangkan kelimpahan alam — buah, bunga, dan kehidupan baru. Hormati tubuhmu, nikmati keindahan dunia, dan biarkan ide-ide berkembang menjadi wujud nyata." },
+    reversed: { keywords: "ketergantungan, kekosongan kreatif, overprotektif, pengabaian diri",
+      meaning: "Energi kreatif tersumbat atau sebaliknya — terlalu banyak memberi tanpa mengisi ulang. Engkau mungkin terlalu protektif pada orang lain dan lupa merawat diri sendiri. Atau justru merasa kosong, mandul ide. Cari kembali hubungan dengan tubuh dan alam." }
+  },
+  {
+    id: 4, numeral: "IV", name: "Kaisar", traditional: "The Emperor",
+    element: "Bumi", planet: "Aries",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M30 25 L35 15 L40 25 L45 15 L50 25 L55 15 L60 25 L65 15 L70 25 L70 30 L30 30 Z" fill="url(#g4)"/>
+      <circle cx="50" cy="42" r="10" fill="url(#g4)"/>
+      <rect x="42" y="52" width="16" height="48" fill="url(#g4)"/>
+      <path d="M35 60 L25 70 L25 100 L35 100 Z" fill="url(#g4)" opacity="0.7"/>
+      <path d="M65 60 L75 70 L75 100 L65 100 Z" fill="url(#g4)" opacity="0.7"/>
+      <rect x="45" y="100" width="5" height="20" fill="url(#g4)"/>
+      <rect x="50" y="100" width="5" height="20" fill="url(#g4)"/>
+      <circle cx="50" cy="68" r="3" fill="#e74c3c"/>
+    </svg>`,
+    upright: { keywords: "otoritas, struktur, kepemimpinan, kestabilan, disiplin, ayah",
+      meaning: "Waktu untuk berdiri tegak dengan otoritas. Kaisar melambangkan tata, hukum, dan fondasi yang kokoh. Engkau dipanggil untuk mengatur hidup, menetapkan batas, dan memimpin dengan kepala dingin. Kekuasaan sejati datang dari disiplin diri dan tanggung jawab." },
+    reversed: { keywords: "tirani, kekakuan, dominasi, kelemahan kepemimpinan, anti-otoritas",
+      meaning: "Otoritas yang berlebihan menjadi tirani, atau sebaliknya — engkau kehilangan kendali dan struktur. Bisa juga menandakan sosok ayah yang dominan/absen, atau keengganan mengambil tanggung jawab. Cari keseimbangan antara disiplin dan keluwesan." }
+  },
+  {
+    id: 5, numeral: "V", name: "Sang Hierofan", traditional: "The Hierophant",
+    element: "Bumi", planet: "Taurus",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M30 25 L40 10 L50 25 L60 10 L70 25 Z" fill="url(#g5)"/>
+      <circle cx="40" cy="20" r="3" fill="url(#g5)"/>
+      <circle cx="50" cy="18" r="3" fill="url(#g5)"/>
+      <circle cx="60" cy="20" r="3" fill="url(#g5)"/>
+      <circle cx="50" cy="42" r="11" fill="url(#g5)"/>
+      <path d="M37 53 Q50 48 63 53 L63 95 L37 95 Z" fill="url(#g5)"/>
+      <path d="M35 95 L65 95 L60 105 L40 105 Z" fill="url(#g5)" opacity="0.8"/>
+      <path d="M30 110 L20 120 L25 125 M70 110 L80 120 L75 125" stroke="url(#g5)" stroke-width="2" fill="none"/>
+      <path d="M45 65 L45 85 M55 65 L55 85" stroke="#fff" stroke-width="1" opacity="0.6"/>
+    </svg>`,
+    upright: { keywords: "tradisi, spiritualitas terorganisir, pendidikan, keyakinan, ritual",
+      meaning: "Hubungkan diri pada kebijaksanaan leluhur dan tradisi yang sudah teruji waktu. Hierofan adalah jembatan antara manusia dan ilahi — melalui ritual, ajaran, atau komunitas spiritual. Saatnya belajar, mencari bimbingan, atau menghormati warisan yang membentukmu." },
+    reversed: { keywords: "pemberontakan, dogma, pemikiran bebas, non-konformitas",
+      meaning: "Saatnya mempertanyakan otoritas dan tradisi yang tidak lagi melayani pertumbuhanmu. Engkau mungkin merasa terkekang oleh dogma atau aturan kaku. Beranikan diri menempuh jalan spiritual yang unik — walau berbeda dari yang diajarkan." }
+  },
+  {
+    id: 6, numeral: "VI", name: "Para Pecinta", traditional: "The Lovers",
+    element: "Udara", planet: "Gemini",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <circle cx="50" cy="20" r="8" fill="url(#g6)"/>
+      <path d="M45 18 Q50 12 55 18" stroke="#fff" stroke-width="1" fill="none"/>
+      <path d="M40 25 Q35 30 30 40 M60 25 Q65 30 70 40" stroke="url(#g6)" stroke-width="1.5" fill="none"/>
+      <circle cx="30" cy="50" r="9" fill="url(#g6)"/>
+      <circle cx="70" cy="50" r="9" fill="url(#g6)"/>
+      <path d="M22 60 L22 110 L38 110 L38 60" fill="url(#g6)" opacity="0.7"/>
+      <path d="M62 60 L62 110 L78 110 L78 60" fill="url(#g6)" opacity="0.7"/>
+      <path d="M40 110 L50 120 L60 110" fill="url(#g6)"/>
+      <path d="M30 80 L70 80" stroke="#e74c3c" stroke-width="1" opacity="0.6"/>
+    </svg>`,
+    upright: { keywords: "cinta, hubungan, pilihan, keselarasan, nilai-nilai, persekutuan",
+      meaning: "Pertemuan dua jiwa yang saling melengkapi. Kartu ini tidak hanya tentang romansa — ia juga tentang pilihan yang mengubah hidup. Dengarkan hati, dan pastikan keputusanmu sejalan dengan nilai terdalam. Keselarasan lahir dari kejujuran dan komitmen." },
+    reversed: { keywords: "disharmoni, keputusan salah, kehilangan nilai, ketidaksetiaan",
+      meaning: "Ketidaksesuaian dalam hubungan atau keputusan yang diambil dengan kepala panas. Bisa juga menandakan ketidaksetiaan atau pilihan yang mengabaikan nilai-nilaimu. Hadapi ketegangan dengan jujur, jangan menghindari percakapan yang sulit." }
+  },
+  {
+    id: 7, numeral: "VII", name: "Kereta Perang", traditional: "The Chariot",
+    element: "Air", planet: "Cancer",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g7" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <circle cx="50" cy="22" r="9" fill="url(#g7)"/>
+      <path d="M42 32 L58 32 L60 50 L40 50 Z" fill="url(#g7)"/>
+      <rect x="30" y="55" width="40" height="35" rx="3" fill="url(#g7)"/>
+      <path d="M50 60 L48 70 L52 70 Z" fill="#e74c3c"/>
+      <circle cx="25" cy="100" r="10" fill="none" stroke="url(#g7)" stroke-width="3"/>
+      <circle cx="75" cy="100" r="10" fill="none" stroke="url(#g7)" stroke-width="3"/>
+      <path d="M20 90 L10 70 L15 65 M80 90 L90 70 L85 65" stroke="url(#g7)" stroke-width="2" fill="none"/>
+      <path d="M10 70 L8 60 L12 62 Z" fill="url(#g7)"/>
+      <path d="M90 70 L92 60 L88 62 Z" fill="url(#g7)"/>
+    </svg>`,
+    upright: { keywords: "kemenangan, kemauan, kontrol, kemajuan, determinasi, sukses",
+      meaning: "Kendali diri dan fokus membawa kemenangan. Kereta melambangkan kekuatan dua tarikan yang berlawanan — kuda hitam dan putih — yang harus diseimbangkan oleh pengendara. Engkau akan menaklukkan rintangan jika memegang kendali dengan tegas namun tenang." },
+    reversed: { keywords: "kehilangan kendali, agresivitas, kegagalan, arah yang kabur",
+      meaning: "Energi yang tak terarah atau konflik internal yang belum terpecahkan. Engkau mungkin didorong oleh ego atau terganggu oleh kekuatan yang menarik ke arah berbeda. Hentikan sejenak, periksa apakah engkau masih berjalan menuju tujuan yang benar." }
+  },
+  {
+    id: 8, numeral: "VIII", name: "Kekuatan", traditional: "Strength",
+    element: "Api", planet: "Leo",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g8" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M40 20 Q50 10 60 20 Q55 28 50 25 Q45 28 40 20" fill="url(#g8)"/>
+      <circle cx="50" cy="40" r="11" fill="url(#g8)"/>
+      <path d="M37 52 Q50 47 63 52 L65 85 L35 85 Z" fill="url(#g8)"/>
+      <path d="M30 90 Q25 100 30 115 Q35 100 35 95 Z" fill="url(#g8)" opacity="0.8"/>
+      <path d="M70 90 Q75 100 70 115 Q65 100 65 95 Z" fill="url(#g8)" opacity="0.8"/>
+      <circle cx="50" cy="105" r="18" fill="url(#g8)" opacity="0.7"/>
+      <path d="M40 100 Q45 95 50 100 Q55 95 60 100" stroke="#fff" stroke-width="1" fill="none"/>
+      <circle cx="45" cy="105" r="2" fill="#fff"/>
+      <circle cx="55" cy="105" r="2" fill="#fff"/>
+      <path d="M50 110 L48 115 L52 115 Z" fill="#e74c3c"/>
+    </svg>`,
+    upright: { keywords: "keberanian, kelembutan, kesabaran, penguasaan diri, belas kasih",
+      meaning: "Kekuatan sejati bukan kekerasan, melainkan kelembutan yang menghadapi amukan dengan tenang. Seperti wanita yang menjinakkan singa dengan tangan kosong, engkau diminta menjinakkan sisi liar dalam diri — amarah, nafsu, ketakutan — dengan cinta dan kesabaran." },
+    reversed: { keywords: "keraguan diri, kelemahan, kemarahan tak terkendali, kehilangan keberanian",
+      meaning: "Kekuatan batin terasa merosot. Engkau mungkin dikuasai oleh emosi atau sebaliknya — kehilangan keberanian untuk bertindak. Cari kembali pusat tenang dalam diri, dan ingat bahwa kelemahan yang diakui adalah langkah pertama menuju kekuatan baru." }
+  },
+  {
+    id: 9, numeral: "IX", name: "Petapa", traditional: "The Hermit",
+    element: "Bumi", planet: "Virgo",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g9" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M40 15 Q50 8 60 15 L60 25 L40 25 Z" fill="url(#g9)"/>
+      <circle cx="50" cy="35" r="10" fill="url(#g9)"/>
+      <path d="M42 30 Q50 25 58 30" stroke="#fff" stroke-width="1" fill="none"/>
+      <rect x="42" y="45" width="16" height="55" rx="2" fill="url(#g9)"/>
+      <path d="M30 70 L25 110 L35 110 Z" fill="url(#g9)" opacity="0.7"/>
+      <path d="M70 70 L75 110 L65 110 Z" fill="url(#g9)" opacity="0.7"/>
+      <circle cx="50" cy="60" r="12" fill="url(#g9)" opacity="0.4"/>
+      <path d="M50 48 L52 55 L60 55 L54 60 L56 67 L50 63 L44 67 L46 60 L40 55 L48 55 Z" fill="#fff" opacity="0.9"/>
+    </svg>`,
+    upright: { keywords: "pengasingan, kontemplasi, kebijaksanaan dalam, pencarian, bimbingan",
+      meaning: "Waktu untuk menarik diri dari hiruk-pikuk dan mencari cahaya di dalam. Petapa membawa lentera kebijaksanaan yang ditemukannya sendiri. Saatnya merenung, mendengarkan suara jiwa, dan menemukan kebenaran pribadi yang tidak bisa diajarkan orang lain." },
+    reversed: { keywords: "isolasi berlebih, penolakan bimbingan, kesepian, kegelapan batin",
+      meaning: "Pengasingan yang berubah menjadi penghindaran, atau sebaliknya — ketakutan untuk sendiri. Engkau mungkin menolak bantuan atau merasa terasing dari dunia. Ingat, kesunyian yang sehat berbeda dengan pelarian. Cari kembali keseimbangan antara kontemplasi dan koneksi." }
+  },
+  {
+    id: 10, numeral: "X", name: "Roda Nasib", traditional: "Wheel of Fortune",
+    element: "Api", planet: "Jupiter",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g10" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <circle cx="50" cy="70" r="35" fill="none" stroke="url(#g10)" stroke-width="3"/>
+      <circle cx="50" cy="70" r="25" fill="none" stroke="url(#g10)" stroke-width="1.5"/>
+      <circle cx="50" cy="70" r="6" fill="url(#g10)"/>
+      <path d="M50 35 L50 105 M15 70 L85 70" stroke="url(#g10)" stroke-width="1.5"/>
+      <path d="M30 50 L70 90 M70 50 L30 90" stroke="url(#g10)" stroke-width="1.5"/>
+      <path d="M50 30 L48 38 L52 38 Z" fill="url(#g10)"/>
+      <path d="M50 110 L48 102 L52 102 Z" fill="url(#g10)"/>
+      <path d="M15 65 L23 67 L23 73 Z" fill="url(#g10)"/>
+      <path d="M85 75 L77 67 L77 73 Z" fill="url(#g10)"/>
+      <text x="50" y="20" font-size="8" fill="url(#g10)" text-anchor="middle" font-family="serif">T A R O</text>
+      <text x="50" y="128" font-size="8" fill="url(#g10)" text-anchor="middle" font-family="serif">R O T A</text>
+    </svg>`,
+    upright: { keywords: "perubahan, siklus, takdir, keberuntungan, titik balik",
+      meaning: "Roda berputar — apa yang di bawah naik, apa yang di atas turun. Kartu ini menandakan perubahan tak terelakkan dan titik balik dalam hidup. Terima bahwa segala sesuatu bergerak dalam siklus. Bertindaklah sesuai arus, dan percaya bahwa keberuntungan sedang berpihak padamu." },
+    reversed: { keywords: "kemalangan, resistensi terhadap perubahan, siklus macet",
+      meaning: "Engkau melawan perubahan atau terjebak dalam pola yang berulang. Roda macet karena engkau menolak bergerak. Lepaskan ketakutan akan yang baru — perubahan adalah satu-satunya konstan. Berhenti menyalahkan nasib dan mulai ambil bagian dalam putaran." }
+  },
+  {
+    id: 11, numeral: "XI", name: "Keadilan", traditional: "Justice",
+    element: "Udara", planet: "Libra",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g11" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <circle cx="50" cy="22" r="9" fill="url(#g11)"/>
+      <path d="M42 17 Q50 10 58 17" stroke="#fff" stroke-width="1" fill="none"/>
+      <rect x="42" y="32" width="16" height="40" fill="url(#g11)"/>
+      <path d="M30 50 L70 50" stroke="url(#g11)" stroke-width="2"/>
+      <path d="M20 50 Q20 60 25 60 Q30 60 30 50" fill="none" stroke="url(#g11)" stroke-width="1.5"/>
+      <path d="M70 50 Q70 60 75 60 Q80 60 80 50" fill="none" stroke="url(#g11)" stroke-width="1.5"/>
+      <path d="M30 50 L25 50 L25 45 M70 50 L75 50 L75 45" stroke="url(#g11)" stroke-width="1.5"/>
+      <path d="M45 72 L40 110 L50 110 L50 72 Z" fill="url(#g11)"/>
+      <path d="M50 72 L50 110 L60 110 L55 72 Z" fill="url(#g11)"/>
+      <path d="M35 110 L65 110" stroke="url(#g11)" stroke-width="2"/>
+    </svg>`,
+    upright: { keywords: "keadilan, kebenaran, sebab-akibat, keseimbangan, hukum",
+      meaning: "Setiap tindakan membawa konsekuensi yang setara. Kartu Keadilan memang pada kejujuran dan ketepatan. Saatnya menimbang keputusan dengan obyektivitas — baik dalam hubungan, pekerjaan, maupun konflik hukum. Apa yang engkau tabur, itu yang akan engkau tuai." },
+    reversed: { keywords: "ketidakadilan, ketidakjujuran, pertanggungjawaban dihindari",
+      meaning: "Ketidakseimbangan atau ketidakadilian yang harus dihadapi. Engkau mungkin menjadi korban atau justru pelaku kesalahan yang belum diakui. Hadapi kebenaran dengan berani, jangan menghindari konsekuensi dari perbuatan sendiri." }
+  },
+  {
+    id: 12, numeral: "XII", name: "Pria Bergantung", traditional: "The Hanged Man",
+    element: "Air", planet: "Neptunus",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M20 15 L80 15" stroke="url(#g12)" stroke-width="3"/>
+      <path d="M50 15 L50 35" stroke="url(#g12)" stroke-width="2"/>
+      <circle cx="50" cy="45" r="9" fill="url(#g12)"/>
+      <path d="M42 50 Q50 55 58 50" stroke="#fff" stroke-width="1" fill="none"/>
+      <path d="M40 55 L40 90 L60 90 L60 55" fill="url(#g12)" opacity="0.8"/>
+      <path d="M50 90 L45 110 L55 110 Z" fill="url(#g12)"/>
+      <path d="M40 60 L25 70 L20 75 M60 60 L75 70 L80 75" stroke="url(#g12)" stroke-width="2" fill="none"/>
+      <circle cx="50" cy="70" r="12" fill="#fff" opacity="0.15"/>
+      <path d="M50 65 L52 70 L48 70 Z" fill="#fff" opacity="0.6"/>
+    </svg>`,
+    upright: { keywords: "pengorbanan, perspektif baru, jeda, pelepasan, pencerahan",
+      meaning: "Berhentilah berjuang dan lihat dari sudut yang berbeda. Pria Bergantung secara sukarela menggantung untuk memperoleh pencerahan. Pelepasan ego dan kontrol membuka wawasan baru. Waktu untuk jeda, mengorbankan sesuatu yang berharga demi pemahaman lebih dalam." },
+    reversed: { keywords: "penundaan, stagnasi, pengorbanan sia-sia, resistensi terhadap perubahan",
+      meaning: "Engkau menolak melepaskan atau merasa pengorbanan yang dibuat tidak dihargai. Stagnasi terjadi karena engkau menahan apa yang harus dilepas. Cari tahu apa yang sebenarnya perlu dikorbankan — dan lakukan dengan hati yang rela." }
+  },
+  {
+    id: 13, numeral: "XIII", name: "Kematian", traditional: "Death",
+    element: "Air", planet: "Skorpio",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g13" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <ellipse cx="50" cy="35" rx="14" ry="16" fill="url(#g13)"/>
+      <ellipse cx="45" cy="35" rx="3" ry="4" fill="#0a0e27"/>
+      <ellipse cx="55" cy="35" rx="3" ry="4" fill="#0a0e27"/>
+      <path d="M45 45 L48 50 L52 50 L55 45" stroke="#0a0e27" stroke-width="1.5" fill="none"/>
+      <path d="M42 50 L40 55 M58 50 L60 55 M44 52 L40 58 M56 52 L60 58" stroke="#0a0e27" stroke-width="0.8"/>
+      <rect x="40" y="55" width="20" height="35" fill="url(#g13)"/>
+      <path d="M30 90 L70 90 L75 120 L25 120 Z" fill="url(#g13)" opacity="0.85"/>
+      <path d="M50 90 L50 30" stroke="#fff" stroke-width="2" opacity="0.3"/>
+      <path d="M50 30 L65 15 L60 25 L70 20" stroke="url(#g13)" stroke-width="2" fill="none"/>
+      <path d="M50 60 Q60 65 65 75" stroke="url(#g13)" stroke-width="2" fill="none"/>
+    </svg>`,
+    upright: { keywords: "akhir, transformasi, transisi, pelepasan, kelahiran kembali",
+      meaning: "Jangan takut — Kematian jarang berarti kematian fisik. Kartu ini menandakan akhir dari satu fase dan kelahiran fase baru. Sesuatu yang lama harus mati agar yang baru bisa tumbuh. Pelepasan yang menyakitkan namun perlu. Setelah musim dingin datang musim semi." },
+    reversed: { keywords: "ketakutan akan perubahan, menahan yang harus pergi, stagnasi",
+      meaning: "Engkau menolak melepaskan apa yang sudah waktunya pergi — hubungan, kebiasaan, atau identitas lama. Stagnasi terjadi karena ketakutan. Hadapi perubahan dengan keberanian; menahan hanya memperpanjang penderitaan." }
+  },
+  {
+    id: 14, numeral: "XIV", name: "Keselarasan", traditional: "Temperance",
+    element: "Api", planet: "Sagitarius",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g14" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <circle cx="50" cy="35" r="13" fill="url(#g14)"/>
+      <path d="M42 30 Q50 23 58 30" stroke="#fff" stroke-width="1" fill="none"/>
+      <ellipse cx="50" cy="35" rx="3" ry="5" fill="#fff" opacity="0.7"/>
+      <path d="M37 48 Q50 43 63 48 L65 95 L35 95 Z" fill="url(#g14)"/>
+      <path d="M37 60 Q42 55 47 60 M53 60 Q58 55 63 60" stroke="#fff" stroke-width="0.8" fill="none"/>
+      <path d="M30 75 L25 90 M70 75 L75 90" stroke="url(#g14)" stroke-width="2" fill="none"/>
+      <path d="M25 80 L22 88 L28 88 Z" fill="#4dd0e1" opacity="0.8"/>
+      <path d="M75 80 L78 88 L72 88 Z" fill="#4dd0e1" opacity="0.8"/>
+      <path d="M45 95 Q50 90 55 95 L55 100 L45 100 Z" fill="url(#g14)"/>
+      <path d="M50 100 Q45 110 40 115 Q50 120 60 115 Q55 110 50 100" fill="url(#g14)" opacity="0.7"/>
+    </svg>`,
+    upright: { keywords: "keseimbangan, kesabaran, moderasi, penyembuhan, sintesis",
+      meaning: "Cari titik tengah dan aliran yang harmonis. Keselarasan mengajarkan pencampuran unsur-unsur yang berlawanan menjadi sesuatu yang baru. Waktu untuk penyembuhan, moderasi, dan kesabaran. Jangan terburu — biarkan matang secara alami." },
+    reversed: { keywords: "ketidakseimbangan, kelebihan, kekurangan, ketidakharmonisan",
+      meaning: "Engkau bergeser ke ekstrem — terlalu banyak atau terlalu sedikit. Ketidakseimbangan dalam kebiasaan, emosi, atau hubungan. Mundur, evaluasi, dan temukan kembali titik tengah yang sehat." }
+  },
+  {
+    id: 15, numeral: "XV", name: "Sang Iblis", traditional: "The Devil",
+    element: "Bumi", planet: "Kaprikornus",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g15" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M30 20 L25 10 L35 18 Z" fill="url(#g15)"/>
+      <path d="M70 20 L75 10 L65 18 Z" fill="url(#g15)"/>
+      <path d="M35 15 L40 25 M65 15 L60 25" stroke="url(#g15)" stroke-width="2" fill="none"/>
+      <circle cx="50" cy="35" r="12" fill="url(#g15)"/>
+      <path d="M45 33 L42 30 L42 35 Z" fill="#0a0e27"/>
+      <path d="M55 33 L58 30 L58 35 Z" fill="#0a0e27"/>
+      <path d="M40 48 L60 48 L62 55 L38 55 Z" fill="url(#g15)" opacity="0.7"/>
+      <path d="M42 55 L42 95 L58 95 L58 55" fill="url(#g15)"/>
+      <path d="M30 90 Q35 80 40 90 M70 90 Q65 80 60 90" stroke="url(#g15)" stroke-width="2" fill="none"/>
+      <rect x="35" y="100" width="30" height="20" fill="none" stroke="url(#g15)" stroke-width="1.5"/>
+      <path d="M50 100 L50 95" stroke="url(#g15)" stroke-width="1.5"/>
+      <circle cx="42" cy="110" r="2" fill="url(#g15)"/>
+      <circle cx="58" cy="110" r="2" fill="url(#g15)"/>
+    </svg>`,
+    upright: { keywords: "ikatan, ketergantungan, materialisme, keinginan, bayangan",
+      meaning: "Sesuatu mengikatmu — kebiasaan, hubungan toksik, ketagihan, atau pola pikir yang membatasi. Iblis menunjukkan apa yang engkau takuti hadapi dalam diri. Sadari bahwa rantai yang mengikatmu sebenarnya tidak terkunci — engkau sendiri yang memegang kuncinya." },
+    reversed: { keywords: "pembebasan, melepaskan ikatan, kesadaran diri, kembalinya kekuasaan",
+      meaning: "Waktu untuk melepaskan rantai. Engkau menyadari pola yang menahan dan secara aktif membebaskan diri. Pemulihan dari ketagihan, keluar dari hubungan toksik, atau melepaskan ketakutan yang mengontrol. Kekuasaan kembali ke tanganmu." }
+  },
+  {
+    id: 16, numeral: "XVI", name: "Menara", traditional: "The Tower",
+    element: "Api", planet: "Mars",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g16" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M50 5 L45 15 L55 15 Z" fill="#e74c3c"/>
+      <path d="M30 15 L70 15" stroke="url(#g16)" stroke-width="1"/>
+      <path d="M50 0 Q45 8 50 15 Q55 8 50 0" fill="url(#g16)" opacity="0.6"/>
+      <path d="M40 15 L35 30 L40 35 L35 50 L40 55 L35 70 L40 75 L35 90 L40 95 L35 110 L40 115 L40 130 L60 130 L60 115 L65 110 L60 95 L65 90 L60 75 L65 70 L60 55 L65 50 L60 35 L65 30 L60 15 Z" fill="url(#g16)"/>
+      <path d="M45 35 L55 35 M45 60 L55 60 M45 85 L55 85 M45 110 L55 110" stroke="#0a0e27" stroke-width="1"/>
+      <path d="M50 0 L55 -5 L60 0 L52 5 Z" fill="#e74c3c"/>
+      <path d="M30 30 L25 40 M70 30 L75 40 M30 70 L20 80 M70 70 L80 80" stroke="url(#g16)" stroke-width="1" opacity="0.6"/>
+      <circle cx="20" cy="80" r="3" fill="url(#g16)" opacity="0.5"/>
+      <circle cx="80" cy="80" r="3" fill="url(#g16)" opacity="0.5"/>
+    </svg>`,
+    upright: { keywords: "kehancuran, perubahan mendadak, pencerahan, krisis, katarsis",
+      meaning: "Struktur yang dibangun di atas fondasi palsu akan runtuh. Menara membawa krisis yang menyakitkan namun membebaskan. Ilusi yang dipegang erat akan pecah. Walaupun menakutkan, kehancuran ini membuka jalan bagi kebenaran yang sejati." },
+    reversed: { keywords: "menghindari kehancuran, menahan perubahan, krisis yang ditunda",
+      meaning: "Engkau menghindari krisis yang sebenarnya diperlukan. Fondasi yang rapuh dipertahankan dengan ketakutan. Lebih baik meruntuhkan sendiri daripada menunggu kejatuhan yang lebih dahsyat. Beranikan diri menghadapi kebenaran yang tidak nyaman." }
+  },
+  {
+    id: 17, numeral: "XVII", name: "Bintang", traditional: "The Star",
+    element: "Udara", planet: "Aquarius",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g17" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <path d="M50 10 L53 22 L65 22 L55 30 L59 42 L50 35 L41 42 L45 30 L35 22 L47 22 Z" fill="url(#g17)"/>
+      <circle cx="20" cy="18" r="3" fill="url(#g17)"/>
+      <circle cx="80" cy="18" r="3" fill="url(#g17)"/>
+      <circle cx="15" cy="40" r="2" fill="url(#g17)"/>
+      <circle cx="85" cy="40" r="2" fill="url(#g17)"/>
+      <circle cx="50" cy="55" r="10" fill="url(#g17)"/>
+      <path d="M42 50 Q50 45 58 50" stroke="#fff" stroke-width="1" fill="none"/>
+      <path d="M37 65 Q50 60 63 65 L65 95 L35 95 Z" fill="url(#g17)"/>
+      <path d="M40 95 Q35 110 40 125 M60 95 Q65 110 60 125" stroke="url(#g17)" stroke-width="2" fill="none"/>
+      <path d="M35 110 L25 125 L30 120 L20 130" stroke="#4dd0e1" stroke-width="1.5" fill="none"/>
+      <path d="M65 110 L75 125 L70 120 L80 130" stroke="#4dd0e1" stroke-width="1.5" fill="none"/>
+    </svg>`,
+    upright: { keywords: "harapan, iman, inspirasi, kesembuhan, kebahagiaan",
+      meaning: "Setelah badai, cahaya bintang menuntun pulang. Kartu Bintang membawa harapan yang lembut, kesembuhan, dan keyakinan bahwa alam semesta mendukungmu. Saatnya membuka diri pada bimbingan ilahi, mengisi kembali cangkir jiwamu, dan percaya pada kebaikan yang akan datang." },
+    reversed: { keywords: "kehilangan harapan, kekecewaan, keputusasaan, kurang iman",
+      meaning: "Cahaya bintang tertutup awan keraguan. Engkau merasa kehilangan arah atau putus asa. Ingat, bintang masih ada di balik awan — engkau hanya tidak melihatnya sekarang. Cari kembali imanmu, walau harus melalui kegelapan terlebih dahulu." }
+  },
+  {
+    id: 18, numeral: "XVIII", name: "Bulan", traditional: "The Moon",
+    element: "Air", planet: "Pisces",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g18" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <circle cx="50" cy="30" r="14" fill="url(#g18)"/>
+      <path d="M50 16 Q42 30 50 44 Q58 30 50 16" fill="#0a0e27" opacity="0.4"/>
+      <path d="M50 18 Q44 30 50 42 Q56 30 50 18" fill="url(#g18)" opacity="0.6"/>
+      <path d="M15 60 L25 55 L25 65 L15 60" fill="url(#g18)" opacity="0.5"/>
+      <path d="M85 60 L75 55 L75 65 L85 60" fill="url(#g18)" opacity="0.5"/>
+      <path d="M30 65 L40 75 L30 85 L20 75 Z" fill="url(#g18)" opacity="0.3"/>
+      <path d="M70 65 L80 75 L70 85 L60 75 Z" fill="url(#g18)" opacity="0.3"/>
+      <path d="M40 90 Q35 100 30 115 Q35 120 45 115 Q40 105 40 90" fill="url(#g18)"/>
+      <path d="M60 90 Q65 100 70 115 Q65 120 55 115 Q60 105 60 90" fill="url(#g18)"/>
+      <path d="M50 95 L48 105 L52 105 Z" fill="#e74c3c" opacity="0.7"/>
+      <path d="M30 120 Q50 115 70 120" stroke="url(#g18)" stroke-width="1" fill="none"/>
+    </svg>`,
+    upright: { keywords: "ilusi, intuisi, mimpi, alam bawah sadar, ketidakpastian",
+      meaning: "Bayang-bayang dan misteri menyelimuti jalan. Bulan menunjukkan bahwa tidak semua yang terlihat adalah nyata. Dengarkan mimpi dan intuisi, tetapi waspadai ilusi dan ketakutan yang diproyeksikan. Saat menembus kabut, kebenaran akan muncul." },
+    reversed: { keywords: "kebebasan dari ilusi, kejernihan, pemahaman, ketakutan terungkap",
+      meaning: "Kabut mulai menyingkap. Engkau melihat kebenaran yang sebelumnya tersembunyi. Ketakutan yang menghantui kehilangan kekuatannya. Waktu untuk berjalan di terang dan membebaskan diri dari ilusi yang menahan." }
+  },
+  {
+    id: 19, numeral: "XIX", name: "Matahari", traditional: "The Sun",
+    element: "Api", planet: "Matahari",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><radialGradient id="g19"><stop offset="0" stop-color="#fff"/><stop offset="0.6" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></radialGradient></defs>
+      <circle cx="50" cy="35" r="18" fill="url(#g19)"/>
+      <path d="M50 5 L50 17 M50 53 L50 65 M20 35 L32 35 M68 35 L80 35 M28 13 L37 22 M63 22 L72 13 M28 57 L37 48 M63 48 L72 57" stroke="#d4af37" stroke-width="2.5"/>
+      <circle cx="50" cy="35" r="10" fill="#e74c3c" opacity="0.6"/>
+      <circle cx="45" cy="33" r="1.5" fill="#0a0e27"/>
+      <circle cx="55" cy="33" r="1.5" fill="#0a0e27"/>
+      <path d="M45 38 Q50 42 55 38" stroke="#0a0e27" stroke-width="1" fill="none"/>
+      <path d="M30 70 Q50 65 70 70 L72 110 L28 110 Z" fill="url(#g19)"/>
+      <path d="M35 110 L30 130 L40 130 M65 110 L70 130 L60 130" stroke="url(#g19)" stroke-width="2" fill="none"/>
+      <path d="M40 75 L60 75" stroke="#fff" stroke-width="1" opacity="0.6"/>
+    </svg>`,
+    upright: { keywords: "kegembiraan, kesuksesan, vitalitas, kebahagiaan, kejernihan",
+      meaning: "Cahaya penuh menyinari hidupmu. Matahari membawa kebahagiaan, kesuksesan, dan kejernihan. Waktu untuk merayakan, tampil di terang, dan menikmati buah kerja keras. Anak dalam diri yang dulu terluka kini pulih dan bersinar. Semua menjadi mungkin." },
+    reversed: { keywords: "kesediman sementara, ego berlebih, optimisme palsu, kesulitan",
+      meaning: "Awan menutupi matahari untuk sementara. Engkau mungkin merasa optimis berlebihan atau sebaliknya — kehilangan antusiasme. Bisa juga menandakan ego yang membengkak. Cari kembali kebahagiaan yang tulus, tanpa kepalsuan." }
+  },
+  {
+    id: 20, numeral: "XX", name: "Penghakiman", traditional: "Judgement",
+    element: "Api", planet: "Pluto",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g20" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <circle cx="50" cy="20" r="10" fill="url(#g20)"/>
+      <path d="M42 15 Q50 8 58 15" stroke="#fff" stroke-width="1" fill="none"/>
+      <path d="M50 12 L50 8 M47 10 L53 10" stroke="url(#g20)" stroke-width="1.5"/>
+      <path d="M37 30 Q50 25 63 30 L65 70 L35 70 Z" fill="url(#g20)"/>
+      <path d="M30 45 L70 45" stroke="#fff" stroke-width="0.8" opacity="0.6"/>
+      <path d="M30 70 L20 85 L25 90 M70 70 L80 85 L75 90" stroke="url(#g20)" stroke-width="2" fill="none"/>
+      <path d="M30 80 L70 80 L75 110 L25 110 Z" fill="url(#g20)" opacity="0.7"/>
+      <path d="M35 110 L40 125 L45 110 M55 110 L60 125 L65 110" stroke="url(#g20)" stroke-width="1.5" fill="none"/>
+      <path d="M50 85 L45 95 L55 95 Z" fill="#e74c3c"/>
+    </svg>`,
+    upright: { keywords: "kebangkitan, pembaruan, panggilan, pengampunan, kebangkitan dalam",
+      meaning: "Saatnya memutar ulang kehidupan. Penghakiman memang untuk merenungkan masa lalu, mengakui kesalahan, dan memaafkan diri sendiri serta orang lain. Panggilan jiwa terdengar — melangkahlah ke versi diri yang lebih tinggi. Kelahiran kembali yang penuh kesadaran." },
+    reversed: { keywords: "keraguan diri, penolakan panggilan, kritik berlebih, penundaan",
+      meaning: "Engkau menolak panggilan atau terlalu keras menghakimi diri sendiri. Suara kritik batin terlalu kuat. Waktu untuk berhenti menghakimi, memaafkan, dan mendengarkan panggilan yang sejati — bukan suara ketakutan." }
+  },
+  {
+    id: 21, numeral: "XXI", name: "Dunia", traditional: "The World",
+    element: "Bumi", planet: "Saturnus",
+    svg: `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g21" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8b6914"/></linearGradient></defs>
+      <ellipse cx="50" cy="70" rx="35" ry="45" fill="none" stroke="url(#g21)" stroke-width="3"/>
+      <ellipse cx="50" cy="70" rx="30" ry="40" fill="none" stroke="url(#g21)" stroke-width="1.5"/>
+      <path d="M50 30 Q55 50 50 70 Q45 90 50 110" stroke="url(#g21)" stroke-width="2" fill="none"/>
+      <path d="M20 70 Q35 65 50 70 Q65 75 80 70" stroke="url(#g21)" stroke-width="2" fill="none"/>
+      <circle cx="50" cy="55" r="8" fill="url(#g21)"/>
+      <path d="M42 55 Q50 48 58 55" stroke="#fff" stroke-width="1" fill="none"/>
+      <rect x="42" y="63" width="16" height="20" fill="url(#g21)"/>
+      <path d="M40 83 Q50 90 60 83 L58 95 L42 95 Z" fill="url(#g21)"/>
+      <circle cx="15" cy="20" r="6" fill="url(#g21)"/>
+      <circle cx="85" cy="20" r="6" fill="url(#g21)"/>
+      <circle cx="15" cy="120" r="6" fill="url(#g21)"/>
+      <circle cx="85" cy="120" r="6" fill="url(#g21)"/>
+      <path d="M15 20 L20 25 L20 15 Z M85 20 L80 25 L80 15 Z" fill="#e74c3c"/>
+      <path d="M15 120 L20 125 L20 115 Z M85 120 L80 125 L80 115 Z" fill="#e74c3c"/>
+    </svg>`,
+    upright: { keywords: "penyempurnaan, pencapaian, integrasi, perjalanan, kesuksesan total",
+      meaning: "Siklus telah lengkap. Dunia menandai pencapaian puncak, integrasi seluruh pelajaran, dan kesuksesan yang penuh. Engkau telah sampai di akhir perjalanan — dan sekaligus di ambang awal yang baru. Rayakan, syukuri, dan bersiaplah untuk babak berikutnya." },
+    reversed: { keywords: "inkomplit, penundaan penutupan, ketidakmampuan maju",
+      meaning: "Sesuatu belum tuntas. Engkau berada di ambang penyelesaian tetapi menahan diri. Cari apa yang masih kurang — mungkin keberanian untuk menutup satu babak. Lengkapkan siklus, dan dunia akan menyambutmu." }
+  }
+];
+
+/* ============================================================
+   CARD BACK SVG (shared)
+   ============================================================ */
+const CARD_BACK_SVG = `<svg class="card-back-symbol" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.2">
+  <circle cx="50" cy="50" r="42"/>
+  <circle cx="50" cy="50" r="32"/>
+  <circle cx="50" cy="50" r="22"/>
+  <path d="M50 8 L52 45 L88 50 L52 55 L50 92 L48 55 L12 50 L48 45 Z" fill="currentColor" opacity="0.4"/>
+  <circle cx="50" cy="50" r="6" fill="currentColor"/>
+  <path d="M50 20 L55 40 L75 45 L55 50 L50 70 L45 50 L25 45 L45 40 Z" fill="currentColor" opacity="0.5"/>
+  <circle cx="20" cy="20" r="2" fill="currentColor"/>
+  <circle cx="80" cy="20" r="2" fill="currentColor"/>
+  <circle cx="20" cy="80" r="2" fill="currentColor"/>
+  <circle cx="80" cy="80" r="2" fill="currentColor"/>
+</svg>`;
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  mode: 'modern',
+  spread: 'single',
+  drawnCards: [],
+  revealed: false
+};
+
+const SPREADS = {
+  single: {
+    label: 'RAMALAN HARIAN',
+    desc: 'Tarik satu kartu untuk mengetahui energi yang menyelimuti harimu.',
+    positions: ['Fokus Hari Ini']
+  },
+  three: {
+    label: 'BENTANG TIGA KARTU',
+    desc: 'Masa Lalu, Masa Kini, dan Masa Depan membentuk garis waktu ramalanmu.',
+    positions: ['Masa Lalu', 'Masa Kini', 'Masa Depan']
+  },
+  five: {
+    label: 'SALIB KELT SEDERHANA',
+    desc: 'Lima posisi membaca: inti, tantangan, lalu, kini, dan arah.',
+    positions: ['Inti', 'Tantangan', 'Lalu', 'Kini', 'Arah']
+  }
+};
+
+/* ============================================================
+   RENDER FUNCTIONS
+   ============================================================ */
+function renderCardPositions() {
+  const container = document.getElementById('cardPositions');
+  const positions = SPREADS[state.spread].positions;
+  container.innerHTML = '';
+  
+  positions.forEach((name, idx) => {
+    const slot = document.createElement('div');
+    slot.className = 'position-slot empty';
+    slot.dataset.idx = idx;
+    
+    const nameLabel = document.createElement('div');
+    nameLabel.className = 'position-name';
+    nameLabel.textContent = name;
+    
+    const cardWrap = document.createElement('div');
+    cardWrap.className = 'card-wrap';
+    
+    const drawn = state.drawnCards[idx];
+    if (drawn) {
+      const cardEl = createCardElement(drawn, state.revealed);
+      cardWrap.appendChild(cardEl);
+      slot.classList.remove('empty');
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'tarot-card placeholder';
+      placeholder.innerHTML = 'Kosong<br>—<br>Menanti';
+      cardWrap.appendChild(placeholder);
+    }
+    
+    slot.appendChild(nameLabel);
+    slot.appendChild(cardWrap);
+    container.appendChild(slot);
+  });
+}
+
+function createCardElement(drawnCard, revealed) {
+  const card = drawnCard.card;
+  const isReversed = drawnCard.reversed;
+  const cardEl = document.createElement('div');
+  cardEl.className = 'tarot-card';
+  if (revealed) cardEl.classList.add('flipped');
+  if (isReversed) cardEl.classList.add('reversed');
+  
+  cardEl.innerHTML = `
+    <div class="reversed-badge">↺ Terbalik</div>
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <div class="card-numeral">${card.numeral}</div>
+        <div class="card-illustration">${card.svg}</div>
+        <div class="card-name">${card.name}</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-back-pattern">
+          ${CARD_BACK_SVG}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  cardEl.addEventListener('click', () => {
+    if (state.drawnCards.length === 0) return;
+    cardEl.classList.toggle('flipped');
+  });
+  
+  return cardEl;
+}
+
+function renderDeckGallery() {
+  const grid = document.getElementById('deckGrid');
+  grid.innerHTML = '';
+  
+  TAROT_DECK.forEach(card => {
+    const wrap = document.createElement('div');
+    wrap.className = 'deck-card';
+    
+    const cardEl = document.createElement('div');
+    cardEl.className = 'tarot-card flipped';
+    cardEl.innerHTML = `
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <div class="card-numeral">${card.numeral}</div>
+          <div class="card-illustration">${card.svg}</div>
+          <div class="card-name">${card.name}</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-back-pattern">${CARD_BACK_SVG}</div>
+        </div>
+      </div>
+    `;
+    cardEl.addEventListener('click', () => openModal(card));
+    
+    const label = document.createElement('div');
+    label.className = 'deck-card-label';
+    label.textContent = card.name;
+    
+    const actions = document.createElement('div');
+    actions.className = 'deck-card-actions';
+    
+    const viewBtn = document.createElement('button');
+    viewBtn.className = 'mini-btn';
+    viewBtn.textContent = 'Telaah';
+    viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openModal(card); });
+    
+    const dlBtn = document.createElement('button');
+    dlBtn.className = 'mini-btn';
+    dlBtn.textContent = 'PNG';
+    dlBtn.addEventListener('click', (e) => { e.stopPropagation(); downloadCardPNG(card, false); });
+    
+    const dlRevBtn = document.createElement('button');
+    dlRevBtn.className = 'mini-btn';
+    dlRevBtn.textContent = '↺ PNG';
+    dlRevBtn.title = 'Unduh posisi terbalik';
+    dlRevBtn.addEventListener('click', (e) => { e.stopPropagation(); downloadCardPNG(card, true); });
+    
+    actions.append(viewBtn, dlBtn, dlRevBtn);
+    
+    wrap.append(cardEl, label, actions);
+    grid.appendChild(wrap);
+  });
+}
+
+function renderInterpretation() {
+  const panel = document.getElementById('interpretationPanel');
+  const container = document.getElementById('interpretations');
+  
+  if (!state.revealed || state.drawnCards.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+  
+  panel.style.display = 'block';
+  container.innerHTML = '';
+  
+  const positions = SPREADS[state.spread].positions;
+  state.drawnCards.forEach((drawn, idx) => {
+    const card = drawn.card;
+    const orientation = drawn.reversed ? 'reversed' : 'upright';
+    const meaning = drawn.reversed ? card.reversed : card.upright;
+    
+    const item = document.createElement('div');
+    item.className = 'interp-card';
+    item.innerHTML = `
+      <div class="interp-card-head">
+        <span class="interp-card-name">${card.numeral}. ${card.name}</span>
+        <span class="interp-card-position">— ${positions[idx]}</span>
+        <span class="interp-orientation ${orientation}">${drawn.reversed ? '↺ Terbalik' : '↑ Tegak'}</span>
+      </div>
+      <div class="interp-keywords">Kata kunci: ${meaning.keywords}</div>
+      <div class="interp-meaning">${meaning.meaning}</div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+/* ============================================================
+   DRAW / SHUFFLE / REVEAL
+   ============================================================ */
+function drawCards() {
+  const numCards = SPREADS[state.spread].positions.length;
+  const shuffled = [...TAROT_DECK].sort(() => Math.random() - 0.5);
+  const drawn = [];
+  
+  for (let i = 0; i < numCards; i++) {
+    drawn.push({
+      card: shuffled[i],
+      reversed: Math.random() < 0.5
+    });
+  }
+  
+  state.drawnCards = drawn;
+  state.revealed = false;
+  
+  // Animate shuffle on stage
+  const stage = document.getElementById('readingStage');
+  stage.classList.add('shuffling');
+  setTimeout(() => {
+    stage.classList.remove('shuffling');
+    renderCardPositions();
+    // Animate draw
+    setTimeout(() => {
+      document.querySelectorAll('.reading-stage .tarot-card:not(.placeholder)').forEach((el, i) => {
+        el.classList.add('draw-anim');
+        setTimeout(() => el.classList.remove('draw-anim'), 600 + i*100);
+      });
+    }, 50);
+    showToast(`${numCards} kartu ditarik. Klik "Buka Semua" untuk menelaah.`);
+  }, 800);
+}
+
+function revealAll() {
+  if (state.drawnCards.length === 0) {
+    showToast('Kocok dan tarik kartu terlebih dahulu.');
+    return;
+  }
+  state.revealed = true;
+  
+  // Reveal cards sequentially
+  const cards = document.querySelectorAll('.reading-stage .tarot-card:not(.placeholder)');
+  cards.forEach((el, idx) => {
+    setTimeout(() => {
+      el.classList.add('flipped');
+      if (state.drawnCards[idx].reversed) {
+        el.classList.add('reversed');
+      }
+    }, idx * 300);
+  });
+  
+  setTimeout(() => {
+    renderInterpretation();
+    showToast('Kartu terungkap. Bacalah tafsir di bawah.');
+  }, cards.length * 300 + 400);
+}
+
+function shuffleDeck() {
+  state.drawnCards = [];
+  state.revealed = false;
+  renderCardPositions();
+  document.getElementById('interpretationPanel').style.display = 'none';
+  
+  const stage = document.getElementById('readingStage');
+  stage.classList.add('shuffling');
+  setTimeout(() => stage.classList.remove('shuffling'), 800);
+  
+  showToast('Dek dikocok. Tarik kartu untuk memulai ramalan.');
+}
+
+function clearReading() {
+  state.drawnCards = [];
+  state.revealed = false;
+  renderCardPositions();
+  document.getElementById('interpretationPanel').style.display = 'none';
+}
+
+/* ============================================================
+   MODAL — Card Detail
+   ============================================================ */
+function openModal(card) {
+  const overlay = document.getElementById('modalOverlay');
+  const display = document.getElementById('modalCardDisplay');
+  const info = document.getElementById('modalInfo');
+  
+  display.innerHTML = `
+    <div class="tarot-card flipped">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <div class="card-numeral">${card.numeral}</div>
+          <div class="card-illustration">${card.svg}</div>
+          <div class="card-name">${card.name}</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-back-pattern">${CARD_BACK_SVG}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  info.innerHTML = `
+    <h2>${card.name}</h2>
+    <div class="modal-traditional">${card.traditional} · ${card.numeral}</div>
+    <div class="modal-meta">
+      <span class="meta-tag">Unsur: ${card.element}</span>
+      <span class="meta-tag">Planet: ${card.planet}</span>
+    </div>
+    
+    <div class="modal-section">
+      <div class="modal-section-title">
+        Posisi Tegak <span class="orient-tag up">↑ Upright</span>
+      </div>
+      <div class="modal-keywords">${card.upright.keywords}</div>
+      <div class="modal-meaning">${card.upright.meaning}</div>
+    </div>
+    
+    <div class="modal-section">
+      <div class="modal-section-title">
+        Posisi Terbalik <span class="orient-tag rev">↺ Reversed</span>
+      </div>
+      <div class="modal-keywords">${card.reversed.keywords}</div>
+      <div class="modal-meaning">${card.reversed.meaning}</div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="action-btn" onclick="downloadCardPNG(currentModalCard, false)">Unduh PNG (Tegak)</button>
+      <button class="action-btn secondary" onclick="downloadCardPNG(currentModalCard, true)">Unduh PNG (Terbalik)</button>
+    </div>
+  `;
+  
+  window.currentModalCard = card;
+  overlay.classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+/* ============================================================
+   DOWNLOAD CARD AS PNG (via Canvas)
+   ============================================================ */
+function downloadCardPNG(card, reversed) {
+  const canvas = document.createElement('canvas');
+  const scale = 3;
+  const w = 280 * scale;
+  const h = 440 * scale;
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  
+  const isAncient = state.mode === 'ancient';
+  
+  // Background
+  if (isAncient) {
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, '#f4e4c1');
+    grad.addColorStop(0.5, '#d4b896');
+    grad.addColorStop(1, '#b89968');
+    ctx.fillStyle = grad;
+  } else {
+    const grad = ctx.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, '#1a1f4d');
+    grad.addColorStop(0.5, '#151933');
+    grad.addColorStop(1, '#0d1132');
+    ctx.fillStyle = grad;
+  }
+  ctx.fillRect(0, 0, w, h);
+  
+  // Border
+  ctx.strokeStyle = isAncient ? '#6b4a2b' : '#d4af37';
+  ctx.lineWidth = 6 * scale;
+  ctx.strokeRect(8 * scale, 8 * scale, w - 16 * scale, h - 16 * scale);
+  
+  // Inner border
+  ctx.lineWidth = 2 * scale;
+  ctx.strokeRect(20 * scale, 20 * scale, w - 40 * scale, h - 40 * scale);
+  
+  // Apply reversed rotation for content
+  ctx.save();
+  if (reversed) {
+    ctx.translate(w / 2, h / 2);
+    ctx.rotate(Math.PI);
+    ctx.translate(-w / 2, -h / 2);
+  }
+  
+  // Card numeral
+  ctx.fillStyle = isAncient ? '#6b4a2b' : '#d4af37';
+  ctx.font = `${28 * scale}px Cinzel, Trajan Pro, Times New Roman, serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText(card.numeral, w / 2, 70 * scale);
+  
+  // Decorative line under numeral
+  ctx.strokeStyle = isAncient ? '#6b4a2b' : '#d4af37';
+  ctx.lineWidth = 1.5 * scale;
+  ctx.beginPath();
+  ctx.moveTo(40 * scale, 85 * scale);
+  ctx.lineTo(w - 40 * scale, 85 * scale);
+  ctx.stroke();
+  
+  // Draw SVG illustration
+  const svgStr = card.svg;
+  const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(svgBlob);
+  const img = new Image();
+  
+  img.onload = function() {
+    const illusSize = 220 * scale;
+    const illusX = (w - illusSize) / 2;
+    const illusY = 110 * scale;
+    ctx.drawImage(img, illusX, illusY, illusSize, illusSize);
+    URL.revokeObjectURL(url);
+    
+    // Decorative line above name
+    ctx.strokeStyle = isAncient ? '#6b4a2b' : '#d4af37';
+    ctx.lineWidth = 1.5 * scale;
+    ctx.beginPath();
+    ctx.moveTo(40 * scale, h - 85 * scale);
+    ctx.lineTo(w - 40 * scale, h - 85 * scale);
+    ctx.stroke();
+    
+    // Card name
+    ctx.fillStyle = isAncient ? '#3d2418' : '#e8e6dc';
+    ctx.font = `${22 * scale}px Cinzel, Trajan Pro, Times New Roman, serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(card.name.toUpperCase(), w / 2, h - 55 * scale);
+    
+    // Traditional name (small)
+    ctx.fillStyle = isAncient ? '#8a6f4f' : '#a8b2d1';
+    ctx.font = `italic ${14 * scale}px Garamond, serif`;
+    ctx.fillText(card.traditional, w / 2, h - 32 * scale);
+    
+    // Reversed indicator (rotated with the rest)
+    if (reversed) {
+      ctx.fillStyle = isAncient ? '#6b4a2b' : '#9b6dff';
+      ctx.font = `${14 * scale}px Inter, sans-serif`;
+      ctx.fillText('↺ POSISI TERBALIK (REVERSED)', w / 2, h - 12 * scale);
+    }
+    
+    // Title bar (also rotated, so reversed card is consistent)
+    ctx.fillStyle = isAncient ? '#6b4a2b' : '#d4af37';
+    ctx.font = `${10 * scale}px Inter, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText('Lentera Tarot · ' + (isAncient ? 'Mode Kuno' : 'Mode Modern'), 30 * scale, h - 14 * scale);
+    
+    ctx.restore();
+    
+    // Trigger download
+    canvas.toBlob(function(blob) {
+      const dlUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = dlUrl;
+      const orientTag = reversed ? 'terbalik' : 'tegak';
+      const modeTag = state.mode;
+      a.download = `tarot-${card.numeral}-${card.name.replace(/\s+/g,'-').toLowerCase()}-${modeTag}-${orientTag}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(dlUrl);
+      showToast(`Kartu "${card.name}" (${orientTag}) berhasil diunduh.`);
+    }, 'image/png');
+  };
+  
+  img.onerror = function() {
+    URL.revokeObjectURL(url);
+    ctx.restore();
+    // Fallback: text only
+    ctx.fillStyle = isAncient ? '#3d2418' : '#e8e6dc';
+    ctx.font = `${22 * scale}px serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(card.name.toUpperCase(), w / 2, h / 2);
+    
+    canvas.toBlob(function(blob) {
+      const dlUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = dlUrl;
+      a.download = `tarot-${card.numeral}-${card.name.replace(/\s+/g,'-').toLowerCase()}.png`;
+      a.click();
+      URL.revokeObjectURL(dlUrl);
+      showToast(`Kartu "${card.name}" diunduh (mode sederhana).`);
+    }, 'image/png');
+  };
+  
+  img.src = url;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> ${msg}`;
+  toast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+/* ============================================================
+   MODE SWITCHING
+   ============================================================ */
+function setMode(mode) {
+  state.mode = mode;
+  document.body.dataset.mode = mode;
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+  
+  const hints = {
+    modern: 'Desain kontemporer dengan nuansa emas &amp; langit malam — untuk peramal masa kini.',
+    ancient: 'Pergamen kuno dengan ornamen klasik — untuk para penyihir &amp; peramal tradisional.'
+  };
+  document.getElementById('modeHint').innerHTML = hints[mode];
+  showToast(`Beralih ke Mode ${mode === 'modern' ? 'Modern' : 'Kuno'}.`);
+}
+
+/* ============================================================
+   SPREAD SWITCHING
+   ============================================================ */
+function setSpread(spread) {
+  state.spread = spread;
+  state.drawnCards = [];
+  state.revealed = false;
+  document.querySelectorAll('.spread-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.spread === spread);
+  });
+  document.getElementById('spreadLabel').textContent = SPREADS[spread].label;
+  document.getElementById('spreadDesc').textContent = SPREADS[spread].desc;
+  document.getElementById('interpretationPanel').style.display = 'none';
+  renderCardPositions();
+}
+
+/* ============================================================
+   EVENT LISTENERS
+   ============================================================ */
+function setupEvents() {
+  // Mode toggle
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => setMode(btn.dataset.mode));
+  });
+  
+  // Spread selector
+  document.querySelectorAll('.spread-btn').forEach(btn => {
+    btn.addEventListener('click', () => setSpread(btn.dataset.spread));
+  });
+  
+  // Action buttons
+  document.getElementById('drawBtn').addEventListener('click', drawCards);
+  document.getElementById('shuffleBtn').addEventListener('click', shuffleDeck);
+  document.getElementById('revealBtn').addEventListener('click', revealAll);
+  document.getElementById('clearBtn').addEventListener('click', clearReading);
+  
+  // Modal close
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('modalOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'modalOverlay') closeModal();
+  });
+  
+  // Esc key to close modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  setupEvents();
+  renderCardPositions();
+  renderDeckGallery();
+}
+
+init();
+</script>
+</body>
+</html>
